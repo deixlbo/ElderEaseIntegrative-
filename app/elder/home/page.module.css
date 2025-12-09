@@ -1,0 +1,203 @@
+.elderHomePage {
+  min-height: 100vh;
+  background: white;
+}
+
+.container {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding: 2rem 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 2rem 2rem;
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between; /* title left, nav right */
+  }
+}
+
+/* Navigation container to align right */
+.nav {
+  margin-left: auto; /* pushes nav to right */
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.title {
+  font-size: 1.875rem;
+  font-weight: bold;
+  color: hsl(var(--foreground));
+}
+
+@media (min-width: 640px) {
+  .title {
+    font-size: 2.25rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .title {
+    font-size: 3rem;
+  }
+}
+
+.subtitle {
+  color: hsl(var(--muted-foreground));
+  font-size: 1rem;
+  margin-top: 0.25rem;
+}
+
+@media (min-width: 640px) {
+  .subtitle {
+    font-size: 1.125rem;
+  }
+}
+
+.postDialog {
+  border: 2px solid hsl(var(--primary));
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+  animation: slideDown 0.3s ease-out;
+}
+
+.postCard {
+  border: 2px solid hsl(var(--border));
+  transition: all 0.3s;
+  animation: fadeIn 0.4s ease-in;
+}
+
+.postCard:hover {
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+  border-color: hsl(var(--primary) / 0.3);
+}
+
+.avatar {
+  width: 3rem;
+  height: 3rem;
+  ring: 2px solid hsl(var(--primary) / 0.2);
+}
+
+@media (min-width: 640px) {
+  .avatar {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-weight: 500;
+}
+
+@media (min-width: 640px) {
+  .badge {
+    font-size: 0.875rem;
+  }
+}
+
+.badgeNeed {
+  background: rgb(255 237 213);
+  color: rgb(154 52 18);
+}
+
+.badgeDonation {
+  background: rgb(220 252 231);
+  color: rgb(21 128 61);
+}
+
+.floatingButton {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  height: 4rem;
+  width: 4rem;
+  border-radius: 9999px;
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  transition: transform 0.2s;
+  animation: bounceSlow 2s infinite;
+}
+
+.floatingButton:hover {
+  transform: scale(1.1);
+}
+
+.loadingContainer {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+}
+
+.loadingContent {
+  text-align: center;
+  animation: fadeIn 0.4s ease-in;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  border-radius: 9999px;
+  height: 4rem;
+  width: 4rem;
+  border-bottom: 4px solid hsl(var(--primary));
+  margin: 0 auto;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bounceSlow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}

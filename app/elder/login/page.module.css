@@ -1,0 +1,135 @@
+.loginPage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  padding: 1rem;
+}
+
+@media (min-width: 640px) {
+  .loginPage {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .loginPage {
+    padding: 2rem;
+  }
+}
+
+.card {
+  width: 100%;
+  max-width: 32rem;
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  border: 2px solid hsl(var(--border));
+}
+
+.header {
+  padding-bottom: 1.5rem;
+  text-align: center;
+}
+
+.title {
+  font-size: 1.875rem;
+  font-weight: bold;
+  color: hsl(var(--foreground));
+}
+
+@media (min-width: 640px) {
+  .title {
+    font-size: 2.25rem;
+  }
+}
+
+.description {
+  font-size: 1rem;
+}
+
+@media (min-width: 640px) {
+  .description {
+    font-size: 1.125rem;
+  }
+}
+
+.content {
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .content {
+    padding: 0 1.5rem;
+  }
+}
+
+.tabsList {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  height: 3rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .tabsList {
+    height: 3.5rem;
+  }
+}
+
+.tabTrigger {
+  font-size: 0.875rem;
+  gap: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .tabTrigger {
+    font-size: 1rem;
+  }
+}
+
+.input {
+  height: 3rem;
+  font-size: 1rem;
+}
+
+@media (min-width: 640px) {
+  .input {
+    height: 3.5rem;
+    font-size: 1.125rem;
+  }
+}
+
+.button {
+  width: 100%;
+  height: 3rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+@media (min-width: 640px) {
+  .button {
+    height: 3.5rem;
+    font-size: 1.125rem;
+  }
+}
+
+.qrContainer {
+  padding: 2rem 0;
+}
+
+.qrIcon {
+  width: 8rem;
+  height: 8rem;
+  background: hsl(var(--secondary));
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 640px) {
+  .qrIcon {
+    width: 10rem;
+    height: 10rem;
+  }
+}
