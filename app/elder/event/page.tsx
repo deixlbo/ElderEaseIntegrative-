@@ -10,7 +10,13 @@ import { Home, BookOpen, User, Menu, X } from "lucide-react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { LocationPicker } from "@/components/location-picker"
+import dynamic from "next/dynamic"
+
+// Load LocationPicker only on the client to avoid "window is not defined" during prerender
+const LocationPicker = dynamic(
+  () => import("@/components/location-picker").then((mod) => mod.LocationPicker),
+  { ssr: false }
+)
 
 interface JoinRequest {
   userId: string

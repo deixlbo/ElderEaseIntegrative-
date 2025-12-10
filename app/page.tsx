@@ -1,45 +1,57 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { Card, CardContent } from "@/components/ui/card"
-import { ElderEaseLogo } from "@/components/elderease-logo"
-import { Menu, X } from "lucide-react"
-import Image from "next/image"
-import styles from "./page.module.css"
-import { useEffect, useState } from "react"
+import Link from "next/link";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { ElderEaseLogo } from "@/components/elderease-logo";
+import { Menu, X } from "lucide-react";
+
+import styles from "./page.module.css";
+import "./globals.css"; // for non-module CSS
 
 export default function LandingPage() {
-  const [activeSection, setActiveSection] = useState("")
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ["description", "problem", "features", "about"]
-      const scrollPosition = window.scrollY + 100
+      const sections = ["description", "problem", "features", "about"];
+      const scrollPosition = window.scrollY + 100;
 
       for (const section of sections) {
-        const element = document.getElementById(section)
+        const element = document.getElementById(section);
         if (element) {
-          const { offsetTop, offsetHeight } = element
+          const { offsetTop, offsetHeight } = element;
           if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(section)
-            break
+            setActiveSection(section);
+            break;
           }
         }
       }
 
-      if (window.scrollY < 200) {
-        setActiveSection("description")
-      }
-    }
+      if (window.scrollY < 200) setActiveSection("description");
+    };
 
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-  const closeMobileMenu = () => {
-    setMobileMenuOpen(false)
-  }
+  const closeMobileMenu = () => setMobileMenuOpen(false);
+
+  const features = [
+    { img: "/tutorials.jpg", title: "Social Media Tutorials", desc: "Step-by-step guides for popular apps." },
+    { img: "/community.jpg", title: "Community Events", desc: "Discover events made for seniors." },
+    { img: "/donation.jpg", title: "Donation & Requests", desc: "Request help or offer assistance." },
+    { img: "/voice.jpg", title: "Voice Assistance", desc: "Navigate using simple voice commands." },
+    { img: "/favorite.jpg", title: "Favorites & Tracking", desc: "Save favorite features for quick access." },
+    { img: "/secure.jpg", title: "Secure Accounts", desc: "Simple login with QR codes." },
+  ];
+
+  const developers = [
+    { img: "/ibasco.jpg", name: "Angela Ibasco", role: "Frontend Developer", desc: "Creating clean and accessible UI for seniors." },
+    { img: "/formeloza.jpg", name: "Axl Denielle Ybo", role: "Backend Developer", desc: "Building secure and reliable systems for seamless user experience." },
+  ];
 
   return (
     <div className={styles.landingPage}>
@@ -48,7 +60,6 @@ export default function LandingPage() {
         <div className={styles.headerContent}>
           <ElderEaseLogo size="sm" />
 
-          {/* Mobile Menu Button */}
           <button
             className={styles.mobileMenuButton}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -57,68 +68,19 @@ export default function LandingPage() {
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
 
-          {/* Navigation */}
           <nav className={`${styles.nav} ${mobileMenuOpen ? styles.navMobileOpen : ""}`}>
-
-            <a
-              href="#description"
-              className={`${styles.navLink} ${activeSection === "description" ? styles.navLinkActive : ""}`}
-              onClick={closeMobileMenu}
-            >
-              Description
-            </a>
-
-            <a
-              href="#problem"
-              className={`${styles.navLink} ${activeSection === "problem" ? styles.navLinkActive : ""}`}
-              onClick={closeMobileMenu}
-            >
-              Problem
-            </a>
-
-            <a
-              href="#features"
-              className={`${styles.navLink} ${activeSection === "features" ? styles.navLinkActive : ""}`}
-              onClick={closeMobileMenu}
-            >
-              Features
-            </a>
-
-            <a
-              href="#about"
-              className={`${styles.navLink} ${activeSection === "about" ? styles.navLinkActive : ""}`}
-              onClick={closeMobileMenu}
-            >
-              About Us
-            </a>
-
-            {/* Login Button */}
-            <Link
-              href="/elder/login"
-              className={styles.loginButton}
-              onClick={closeMobileMenu}
-            >
-              Login
-            </Link>
-
-            {/* Register Button */}
-            <Link
-              href="/elder/register"
-              className={styles.registerButton}
-              onClick={closeMobileMenu}
-            >
-              Register
-            </Link>
-
+            <a href="#description" className={`${styles.navLink} ${activeSection === "description" ? styles.navLinkActive : ""}`} onClick={closeMobileMenu}>Description</a>
+            <a href="#problem" className={`${styles.navLink} ${activeSection === "problem" ? styles.navLinkActive : ""}`} onClick={closeMobileMenu}>Problem</a>
+            <a href="#features" className={`${styles.navLink} ${activeSection === "features" ? styles.navLinkActive : ""}`} onClick={closeMobileMenu}>Features</a>
+            <a href="#about" className={`${styles.navLink} ${activeSection === "about" ? styles.navLinkActive : ""}`} onClick={closeMobileMenu}>About Us</a>
+            <Link href="/elder/login" className={styles.loginButton} onClick={closeMobileMenu}>Login</Link>
+            <Link href="/elder/register" className={styles.registerButton} onClick={closeMobileMenu}>Register</Link>
           </nav>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section
-        className={`${styles.heroSection} ${styles.noSpacing}`}
-        style={{ backgroundImage: "url('/touch.jpg')" }}
-      >
+      {/* Hero */}
+      <section className={`${styles.heroSection} ${styles.noSpacing}`} style={{ backgroundImage: "url('/touch.jpg')" }}>
         <div className={styles.heroOverlay}></div>
         <div className={styles.heroContent}>
           <ElderEaseLogo size="lg" />
@@ -131,18 +93,13 @@ export default function LandingPage() {
       <section id="description" className={`${styles.descriptionSection} ${styles.sectionSpacing}`}>
         <div className={styles.sectionContent}>
           <h2 className={styles.sectionTitle}>What is ElderEase?</h2>
-
           <div className={styles.aboutCard}>
             <p className={styles.aboutCardDescription}>
               ElderEase is a comprehensive digital platform designed to bridge the technology gap for elderly individuals.
-              We understand that seniors often face challenges navigating the digital world, from social media to healthcare services.
             </p>
-            <br />
             <p className={styles.aboutCardDescription}>
-              With features like step-by-step social media tutorials, event discovery, 
-              and secure accounts, ElderEase makes essential digital services simple and accessible.
+              With features like step-by-step social media tutorials, event discovery, and secure accounts, ElderEase makes essential digital services simple and accessible.
             </p>
-            <br />
             <p className={styles.aboutCardDescription}>
               Whether you're staying connected with loved ones or finding healthcare services, ElderEase is your trusted companion.
             </p>
@@ -150,11 +107,10 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Problem */}
+      {/* Problem & Solution */}
       <section id="problem" className={`${styles.problemSection} ${styles.sectionSpacing}`}>
         <div className={styles.sectionContent}>
           <h2 className={styles.sectionTitle}>Problem & Solution</h2>
-
           <div className={styles.grid2Col}>
             <Card className={styles.card}>
               <div className={styles.cardImageContainer}>
@@ -189,16 +145,8 @@ export default function LandingPage() {
       <section id="features" className={`${styles.featuresSection} ${styles.sectionSpacing}`}>
         <div className={styles.sectionContent}>
           <h2 className={styles.sectionTitle}>Key Features</h2>
-
           <div className={styles.grid3Col}>
-            {[
-              { img: "/tutorials.jpg", title: "Social Media Tutorials", desc: "Step-by-step guides for popular apps." },
-              { img: "/community.jpg", title: "Community Events", desc: "Discover events made for seniors." },
-              { img: "/donation.jpg", title: "Donation & Requests", desc: "Request help or offer assistance." },
-              { img: "/voice.jpg", title: "Voice Assistance", desc: "Navigate using simple voice commands." },
-              { img: "/favorite.jpg", title: "Favorites & Tracking", desc: "Save favorite features for quick access." },
-              { img: "/secure.jpg", title: "Secure Accounts", desc: "Simple login with QR codes." },
-            ].map((item, i) => (
+            {features.map((item, i) => (
               <Card key={i} className={styles.card}>
                 <div className={styles.cardImageContainer}>
                   <Image src={item.img} alt={item.title} width={400} height={200} className={styles.cardImage} />
@@ -214,42 +162,24 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* About */}
+      {/* About / Developers */}
       <section id="about" className={`${styles.aboutSection} ${styles.sectionSpacing}`}>
         <div className={styles.sectionContent}>
           <h2 className={styles.sectionTitle}>About Us</h2>
-
           <div className={styles.developersSection}>
             <div className={styles.developersGrid}>
-              {/* Developer 1 */}
-              <Card className={styles.developerCard}>
-                <CardContent className={styles.developerContent}>
-                  <div className={styles.developerImage}>
-                    <Image src="/ibasco.jpg" alt="Angela Ibasco" width={128} height={128} />
-                  </div>
-                  <div>
-                    <h4 className={styles.developerName}>Angela Ibasco</h4>
-                    <p className={styles.developerRole}>Frontend Developer</p>
-                    <p className={styles.developerDescription}>Creating clean and accessible UI for seniors.</p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Developer 2 */}
-              <Card className={styles.developerCard}>
-                <CardContent className={styles.developerContent}>
-                  <div className={styles.developerImage}>
-                    <Image src="/formeloza.jpg" alt="Axl Denielle Ybo" width={128} height={128} />
-                  </div>
-                  <div>
-                    <h4 className={styles.developerName}>Axl Denielle Ybo</h4>
-                    <p className={styles.developerRole}>Backend Developer</p>
-                    <p className={styles.developerDescription}>
-                      Building secure and reliable systems for seamless user experience.
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
+              {developers.map((dev, i) => (
+                <Card key={i} className={styles.developerCard}>
+                  <CardContent className={styles.developerContent}>
+                    <div className={styles.developerImage}>
+                      <Image src={dev.img} alt={dev.name} width={128} height={128} className={styles.cardImageLocal} />
+                    </div>
+                    <h4 className={styles.developerName}>{dev.name}</h4>
+                    <p className={styles.developerRole}>{dev.role}</p>
+                    <p className={styles.developerDescription}>{dev.desc}</p>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
         </div>
@@ -268,7 +198,6 @@ export default function LandingPage() {
                 <li><a href="#about" className={styles.footerLink}>About Us</a></li>
               </ul>
             </div>
-
             <div className={styles.footerSection}>
               <h4 className={styles.footerSectionTitle}>Connect With Us</h4>
               <div className={styles.footerContactInfo}>
@@ -283,12 +212,11 @@ export default function LandingPage() {
               </div>
             </div>
           </div>
-
           <div className={styles.footerCopyright}>
             <p className={styles.footerText}>© 2025 ElderEase. Making healthcare accessible for everyone.</p>
           </div>
         </div>
       </footer>
     </div>
-  )
+  );
 }

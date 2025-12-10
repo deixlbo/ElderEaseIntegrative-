@@ -1489,24 +1489,56 @@ export default function ElderTutorialPage() {
     style.id = 'print-bw-styles'
     style.innerHTML = `
       @media print {
+        /* Force overall black & white */
         html, body {
           background: #fff !important;
           color: #000 !important;
           -webkit-print-color-adjust: exact;
           print-color-adjust: exact;
+          filter: none !important;
         }
+
+        /* Make all text and borders black, remove colors and shadows */
         * {
           color: #000 !important;
           background: transparent !important;
+          background-color: transparent !important;
+          border-color: #000 !important;
           box-shadow: none !important;
           text-shadow: none !important;
         }
-        /* hide UI elements not needed in print */
-        video, img, .no-print, .fixed, .bot, .shadow-2xl, .animate-pulse {
+
+        /* Convert images, videos and svgs to grayscale (so they print B/W) */
+        img, video, svg {
+          -webkit-filter: grayscale(100%) !important;
+          filter: grayscale(100%) !important;
+          opacity: 1 !important;
+          background: transparent !important;
+        }
+
+        /* Convert inline styles that set colors */
+        [style] {
+          color: #000 !important;
+          background: transparent !important;
+        }
+
+        /* Hide purely decorative UI elements */
+        .no-print, .fixed, .bot, .shadow-2xl, .animate-pulse {
           display: none !important;
         }
-        /* ensure cards print as plain boxes */
+
+        /* Ensure cards print as plain boxes */
         .rounded-2xl, .rounded-xl { border-radius: 0 !important; }
+
+        /* Make links visible but in black */
+        a { color: #000 !important; text-decoration: underline !important; }
+
+        /* Ensure form controls print legibly */
+        input, button, select, textarea {
+          color: #000 !important;
+          background: transparent !important;
+          border-color: #000 !important;
+        }
       }
     `
     document.head.appendChild(style)
