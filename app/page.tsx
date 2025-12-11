@@ -203,7 +203,7 @@ export default function LandingPage() {
               <div className={styles.footerContactInfo}>
                 <div className={styles.contactItem}>
                   <p className={styles.contactLabel}>Email:</p>
-                  <a href="mailto:team.elderease@gmail.com" className={styles.footerLink}>team.elderease@gmail.com</a>
+                  <a href="mailto:team.elderease@gmail.com" className={styles.footerLink}>elderease86@gmail.com</a>
                 </div>
                 <div className={styles.contactItem}>
                   <p className={styles.contactLabel}>Phone:</p>
@@ -213,7 +213,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className={styles.footerCopyright}>
-            <p className={styles.footerText}>© 2025 ElderEase. Making healthcare accessible for everyone.</p>
+            <p className={styles.footerText}>© 2025 ElderEase. No one left behind.</p>
           </div>
         </div>
       </footer>

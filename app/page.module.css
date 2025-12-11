@@ -4,8 +4,8 @@
 .landingPage {
   min-height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
-  background: #f9fdf9;
-  color: #1a3c27;
+  background: #f9f9f9;
+  color: #000000;
   line-height: 1.6;
 }
 
@@ -18,16 +18,16 @@
   padding: 5rem 1rem;
 }
 
-/* Header */
+/* Header - GREEN color */
 .header {
-  background: #ffffff;
+  background: #228b22; /* Forest green */
   padding: 1.5rem 0;
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 2px 20px rgba(76, 175, 80, 0.08);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid #e8f5e9;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .headerContent {
@@ -42,18 +42,19 @@
 .mobileMenuButton {
   display: none;
   background: none;
-  border: 1.5px solid #4caf50;
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
   border-radius: 8px;
   width: 48px;
   height: 48px;
   cursor: pointer;
-  color: #2e7d32;
+  color: white; /* White for contrast on green */
   transition: all 0.2s ease;
+  z-index: 101;
 }
 
 .mobileMenuButton:hover {
-  background: #f1f8f1;
-  border-color: #388e3c;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: white;
 }
 
 /* Navigation */
@@ -64,7 +65,7 @@
 }
 
 .navLink {
-  color: #2e7d32;
+  color: rgba(255, 255, 255, 0.9); /* White text for green header */
   text-decoration: none;
   font-weight: 500;
   font-size: 1rem;
@@ -80,12 +81,12 @@
   left: 0;
   width: 0;
   height: 2px;
-  background: #4caf50;
+  background: white; /* White underline for green header */
   transition: width 0.3s ease;
 }
 
 .navLink:hover {
-  color: #388e3c;
+  color: white; /* Full white on hover */
 }
 
 .navLink:hover::after {
@@ -93,13 +94,13 @@
 }
 
 .navLinkActive {
-  color: #2e7d32;
+  color: white; /* Active link in white */
   font-weight: 600;
 }
 
 .navLinkActive::after {
   width: 100%;
-  background: #2e7d32;
+  background: white; /* White underline for active */
 }
 
 .loginButton, .registerButton {
@@ -112,25 +113,25 @@
 }
 
 .loginButton {
-  background: #ffffff;
-  color: #2e7d32;
-  border: 1.5px solid #4caf50;
+  background: rgba(255, 255, 255, 0.9);
+  color: #228b22; /* Green text */
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
 }
 
 .loginButton:hover {
-  background: #f1f8f1;
-  border-color: #388e3c;
+  background: white;
+  border-color: white;
 }
 
 .registerButton {
-  background: #2e7d32;
-  color: white;
-  border: 1.5px solid #2e7d32;
+  background: white;
+  color: #228b22; /* Green text */
+  border: 1.5px solid white;
 }
 
 .registerButton:hover {
-  background: #1b5e20;
-  border-color: #1b5e20;
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.9);
 }
 
 /* Hero Section */
@@ -150,7 +151,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(46, 125, 50, 0.92), rgba(56, 142, 60, 0.88));
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.85), rgba(50, 50, 50, 0.9));
 }
 
 .heroContent {
@@ -160,12 +161,95 @@
   color: white;
   padding: 2rem;
   max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* Circular logo wrapper for ElderEaseLogo component */
+.circularLogoWrapper {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: white;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.circularLogoWrapper.lg {
+  width: 220px;
+  height: 220px;
+  padding: 25px;
+}
+
+.circularLogoWrapper.md {
+  width: 150px;
+  height: 150px;
+  padding: 18px;
+}
+
+.circularLogoWrapper.sm {
+  width: 50px;
+  height: 50px;
+  padding: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.circularLogoWrapper.xs {
+  width: 40px;
+  height: 40px;
+  padding: 6px;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+}
+
+.circularLogoWrapper.sm:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* If the ElderEaseLogo component is an SVG or image inside */
+.circularLogoWrapper svg,
+.circularLogoWrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 0;
+}
+
+/* Header logo wrapper */
+.headerLogoWrapper {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: white;
+  padding: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.headerLogoWrapper:hover {
+  transform: scale(1.05);
+  border-color: white;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 }
 
 .heroTitle {
   font-size: 3.25rem;
   font-weight: 300;
-  margin: 1.5rem 0;
+  margin: 0;
   line-height: 1.2;
   color: #ffffff;
   letter-spacing: -0.5px;
@@ -173,7 +257,7 @@
 
 .heroDescription {
   font-size: 1.25rem;
-  color: #e8f5e9;
+  color: #f0f0f0;
   max-width: 600px;
   margin: 0 auto;
   font-weight: 400;
@@ -192,7 +276,7 @@
   font-size: 2.5rem;
   font-weight: 300;
   margin-bottom: 3.5rem;
-  color: #1b5e20;
+  color: #000000;
   letter-spacing: -0.5px;
 }
 
@@ -205,17 +289,17 @@
   background: #ffffff;
   padding: 3rem;
   border-radius: 16px;
-  border: 1px solid #e8f5e9;
+  border: 1px solid #e0e0e0;
   max-width: 800px;
   margin: 0 auto;
-  box-shadow: 0 4px 24px rgba(46, 125, 50, 0.08);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
 }
 
 .aboutCardDescription {
   font-size: 1.125rem;
   line-height: 1.8;
   margin-bottom: 1.5rem;
-  color: #2e7d32;
+  color: #333333;
   text-align: center;
 }
 
@@ -244,14 +328,14 @@
   border-radius: 16px;
   overflow: hidden;
   transition: all 0.3s ease;
-  border: 1px solid #e8f5e9;
+  border: 1px solid #e0e0e0;
   height: 100%;
 }
 
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(46, 125, 50, 0.12);
-  border-color: #4caf50;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+  border-color: #666666;
 }
 
 .cardImageContainer {
@@ -273,7 +357,7 @@
 
 .colorBar {
   height: 4px;
-  background: linear-gradient(90deg, #4caf50, #81c784);
+  background: linear-gradient(90deg, #666666, #999999);
 }
 
 .cardContent {
@@ -281,14 +365,14 @@
 }
 
 .cardTitle {
-  color: #1b5e20;
+  color: #000000;
   font-size: 1.375rem;
   font-weight: 500;
   margin-bottom: 0.75rem;
 }
 
 .cardDescription {
-  color: #558b2f;
+  color: #444444;
   font-size: 1rem;
   line-height: 1.6;
   opacity: 0.9;
@@ -296,7 +380,7 @@
 
 /* Developers Section */
 .aboutSection {
-  background: #f1f8f1;
+  background: #f5f5f5;
 }
 
 .developersSection {
@@ -316,13 +400,13 @@
   border-radius: 16px;
   padding: 2.5rem;
   text-align: center;
-  border: 1px solid #e8f5e9;
+  border: 1px solid #e0e0e0;
   transition: all 0.3s ease;
 }
 
 .developerCard:hover {
-  border-color: #4caf50;
-  box-shadow: 0 8px 24px rgba(46, 125, 50, 0.1);
+  border-color: #666666;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
 .developerImage {
@@ -331,8 +415,8 @@
   margin: 0 auto 1.5rem;
   border-radius: 50%;
   overflow: hidden;
-  border: 3px solid #f1f8f1;
-  background: #f1f8f1;
+  border: 3px solid #f0f0f0;
+  background: #f0f0f0;
 }
 
 .cardImageLocal {
@@ -343,29 +427,29 @@
 }
 
 .developerName {
-  color: #1b5e20;
+  color: #000000;
   font-size: 1.5rem;
   font-weight: 500;
   margin: 0.75rem 0;
 }
 
 .developerRole {
-  color: #4caf50;
+  color: #666666;
   font-weight: 500;
   font-size: 1.125rem;
   margin-bottom: 1rem;
 }
 
 .developerDescription {
-  color: #558b2f;
+  color: #444444;
   line-height: 1.7;
   font-size: 0.95rem;
 }
 
-/* Footer */
+/* Footer - GREEN color */
 .footer {
-  background: #1b5e20;
-  color: #ffffff;
+  background: #228b22; /* Forest green */
+  color: white;
   padding: 4rem 1.5rem 2rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -390,8 +474,8 @@
   font-size: 1.125rem;
   font-weight: 500;
   margin-bottom: 1.5rem;
-  color: #ffffff;
-  opacity: 0.9;
+  color: white;
+  opacity: 0.95;
   letter-spacing: 0.5px;
 }
 
@@ -406,14 +490,14 @@
 }
 
 .footerLink {
-  color: #c8e6c9;
+  color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
   transition: color 0.2s ease;
   font-size: 0.95rem;
 }
 
 .footerLink:hover {
-  color: #ffffff;
+  color: white;
 }
 
 .footerContactInfo {
@@ -429,7 +513,7 @@
 }
 
 .contactLabel {
-  color: #a5d6a7;
+  color: rgba(255, 255, 255, 0.7);
   font-weight: 500;
   font-size: 0.95rem;
   min-width: 60px;
@@ -438,13 +522,13 @@
 .footerCopyright {
   text-align: center;
   padding-top: 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .footerText {
-  color: #a5d6a7;
+  color: rgba(255, 255, 255, 0.7);
   font-size: 0.9rem;
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 /* Responsive Design */
@@ -467,24 +551,70 @@
     display: block;
   }
 
+  /* Mobile menu as dropdown (no box) */
   .nav {
     display: none;
-    position: fixed;
-    top: 80px;
-    left: 1rem;
-    right: 1rem;
-    background: #ffffff;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #228b22;
     flex-direction: column;
-    padding: 2rem;
-    gap: 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(46, 125, 50, 0.15);
+    padding: 1.5rem;
+    gap: 1.25rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     z-index: 99;
-    border: 1px solid #e8f5e9;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    animation: slideDown 0.3s ease-out;
+    border-radius: 0 0 12px 12px;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .navMobileOpen {
     display: flex;
+  }
+
+  .navLink {
+    width: 100%;
+    text-align: left;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .navLink:last-child {
+    border-bottom: none;
+  }
+
+  .navLink::after {
+    display: none;
+  }
+
+  .loginButton, .registerButton {
+    width: 100%;
+    text-align: center;
+    margin-top: 0.5rem;
+    padding: 1rem;
+    font-size: 1rem;
+  }
+
+  .loginButton {
+    margin-bottom: 0.5rem;
+  }
+
+  .headerContent {
+    padding: 0 1rem;
   }
 
   .grid2Col,
@@ -512,6 +642,24 @@
 
   .sectionSpacing {
     padding: 4rem 1rem;
+  }
+
+  .circularLogoWrapper.lg {
+    width: 180px;
+    height: 180px;
+    padding: 20px;
+  }
+  
+  .circularLogoWrapper.sm {
+    width: 45px;
+    height: 45px;
+    padding: 7px;
+  }
+  
+  .headerLogoWrapper {
+    width: 45px;
+    height: 45px;
+    padding: 7px;
   }
 }
 
@@ -555,20 +703,42 @@
   .contactLabel {
     min-width: auto;
   }
+
+  .circularLogoWrapper.lg {
+    width: 150px;
+    height: 150px;
+    padding: 18px;
+  }
+  
+  .circularLogoWrapper.sm {
+    width: 40px;
+    height: 40px;
+    padding: 6px;
+  }
+  
+  .headerLogoWrapper {
+    width: 40px;
+    height: 40px;
+    padding: 6px;
+  }
+  
+  .nav {
+    padding: 1.25rem;
+  }
 }
 
 /* Focus States for Accessibility */
 button:focus,
 a:focus,
 .mobileMenuButton:focus {
-  outline: 2px solid #4caf50;
+  outline: 2px solid white;
   outline-offset: 2px;
 }
 
 /* Loading state for images */
 .cardImage,
 .cardImageLocal {
-  background: linear-gradient(90deg, #f1f8f1 25%, #e8f5e9 50%, #f1f8f1 75%);
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
 }
@@ -579,14 +749,16 @@ a:focus,
 }
 
 /* Helper: render an <img src="ease.jpg"> as a perfect circle */
-.ease circle {
-  width: 200px; /* adjust size as needed */
+.circularImage {
+  width: 200px;
   height: 200px;
   border-radius: 50%;
   overflow: hidden;
   display: inline-block;
+  margin: 0 auto;
 }
-.ease img {
+
+.circularImage img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -594,10 +766,19 @@ a:focus,
   border-radius: 50%;
 }
 
-/* Helper: remove/zero-out the green channel from a background image using an inline SVG filter
-   Use by adding the class to the element that has the background-image, e.g. <div class="heroSection bgRemoveGreen"> */
+/* Helper: remove/zero-out the green channel from a background image */
 .bgRemoveGreen {
-  /* Removes the green channel via an SVG color-matrix filter embedded as a data URI */
   filter: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='removeGreen'><feColorMatrix type='matrix' values='1 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0'/></filter></svg>#removeGreen");
   -webkit-filter: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='removeGreen'><feColorMatrix type='matrix' values='1 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0'/></filter></svg>#removeGreen");
 }
+
+/* Optional: Gradient variant for header/footer (uncomment to use) */
+/*
+.header {
+  background: linear-gradient(135deg, #228b22 0%, #1e7c1e 100%);
+}
+
+.footer {
+  background: linear-gradient(135deg, #1e7c1e 0%, #228b22 100%);
+}
+*/

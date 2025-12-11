@@ -30,25 +30,9 @@ import {
   Zap,
   Sparkles,
   MessageSquare,
-  Video,
-  Camera,
-  Mail,
-  Phone,
-  Users,
-  Music,
-  Globe,
-  Image as ImageIcon,
-  ThumbsUp,
-  Repeat,
-  UserPlus,
-  UserMinus,
-  FolderPlus,
-  Trash2,
-  Filter,
-  Heart,
-  Trophy,
-  Target,
-  Bookmark
+  Download,
+  Printer,
+  FileText
 } from "lucide-react"
 
 // Types for tutorial progress and favorites
@@ -1476,97 +1460,162 @@ export default function ElderTutorialPage() {
   const [greeting, setGreeting] = useState("Good Morning")
   const [favorites, setFavorites] = useState<FavoriteTutorial[]>([])
   const [showSearchSuggestions, setShowSearchSuggestions] = useState(false)
+  const [exportModalOpen, setExportModalOpen] = useState(false)
+  const [exportOption, setExportOption] = useState<'completed' | 'in-progress' | 'favorites' | 'all'>('completed')
+  const [exportLoading, setExportLoading] = useState(false)
   const router = useRouter()
   const { isListening, transcript, startListening } = useVoiceRecognition()
   const [videoProgress, setVideoProgress] = useState(0)
-
-  // --- added: print / export B&W helper ------------------------------------------------
-  const injectPrintBWStyles = () => {
-    if (typeof window === 'undefined') return
-    if (document.getElementById('print-bw-styles')) return
-
-    const style = document.createElement('style')
-    style.id = 'print-bw-styles'
-    style.innerHTML = `
-      @media print {
-        /* Force overall black & white */
-        html, body {
-          background: #fff !important;
-          color: #000 !important;
-          -webkit-print-color-adjust: exact;
-          print-color-adjust: exact;
-          filter: none !important;
-        }
-
-        /* Make all text and borders black, remove colors and shadows */
-        * {
-          color: #000 !important;
-          background: transparent !important;
-          background-color: transparent !important;
-          border-color: #000 !important;
-          box-shadow: none !important;
-          text-shadow: none !important;
-        }
-
-        /* Convert images, videos and svgs to grayscale (so they print B/W) */
-        img, video, svg {
-          -webkit-filter: grayscale(100%) !important;
-          filter: grayscale(100%) !important;
-          opacity: 1 !important;
-          background: transparent !important;
-        }
-
-        /* Convert inline styles that set colors */
-        [style] {
-          color: #000 !important;
-          background: transparent !important;
-        }
-
-        /* Hide purely decorative UI elements */
-        .no-print, .fixed, .bot, .shadow-2xl, .animate-pulse {
-          display: none !important;
-        }
-
-        /* Ensure cards print as plain boxes */
-        .rounded-2xl, .rounded-xl { border-radius: 0 !important; }
-
-        /* Make links visible but in black */
-        a { color: #000 !important; text-decoration: underline !important; }
-
-        /* Ensure form controls print legibly */
-        input, button, select, textarea {
-          color: #000 !important;
-          background: transparent !important;
-          border-color: #000 !important;
-        }
+  
+  const gatherTutorialsForExport = (option: typeof exportOption) => {
+    const all = []
+    for (const [platform, tutorials] of Object.entries(tutorialData)) {
+      for (let i = 0; i < tutorials.length; i++) {
+        const t = tutorials[i]
+        const prog = TutorialProgressTracker.getProgress().find(p => p.tutorialId === t.id)
+        const isFav = TutorialProgressTracker.isFavorite(t.id)
+        const status = prog?.status ?? 'not-started'
+        all.push({
+          platform,
+          title: t.title,
+          durationMin: Math.ceil(t.duration / 60),
+          status,
+          isFav
+        })
       }
-    `
-    document.head.appendChild(style)
-  }
-
-  const removePrintBWStyles = () => {
-    if (typeof window === 'undefined') return
-    const el = document.getElementById('print-bw-styles')
-    if (el) el.remove()
-  }
-
-  const handlePrintBW = () => {
-    if (typeof window === 'undefined') return
-    injectPrintBWStyles()
-    // print; afterprint listener will cleanup
-    window.print()
-  }
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    const cleanup = () => removePrintBWStyles()
-    window.addEventListener('afterprint', cleanup)
-    return () => {
-      window.removeEventListener('afterprint', cleanup)
-      removePrintBWStyles()
     }
-  }, [])
-  // -------------------------------------------------------------------------------------
+
+    if (option === 'all') return all
+    if (option === 'favorites') return all.filter(a => a.isFav)
+    if (option === 'completed') return all.filter(a => a.status === 'completed')
+    if (option === 'in-progress') return all.filter(a => a.status === 'in-progress')
+    return []
+  }
+
+  const generatePDF = async (option: typeof exportOption, doPrint = false) => {
+    if (typeof window === 'undefined') return
+    setExportLoading(true)
+    try {
+      const rows = gatherTutorialsForExport(option)
+
+      // Build table rows (monospace-friendly)
+      const tableHeader = ['#', 'Platform', 'Title', 'Duration', 'Status']
+      const tableRows: string[] = []
+      rows.forEach((row: any, i: number) => {
+        tableRows.push([
+          String(i + 1),
+          (platformData[row.platform as keyof typeof platformData]?.name || row.platform),
+          row.title,
+          `${row.durationMin} min`,
+          row.status
+        ].map(s => String(s)).join(' | '))
+      })
+
+      // Compose document text using fixed-width formatting for a simple table
+      const bodyLines: string[] = []
+      bodyLines.push('ElderEase - Tutorials Export')
+      bodyLines.push(`Export Type: ${option}`)
+      bodyLines.push(`Generated: ${new Date().toLocaleString()}`)
+      bodyLines.push('')
+      // header (as text row)
+      bodyLines.push(tableHeader.join(' | '))
+      bodyLines.push('-'.repeat(98))
+      tableRows.forEach(r => bodyLines.push(r))
+
+      const bodyText = bodyLines.join('\n')
+
+      // Simple PDF generator (built-in fonts only, black & white)
+      const createSimplePdfBytes = (text: string) => {
+        const encoder = new TextEncoder()
+        const escapeParens = (s: string) =>
+          s.replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)')
+
+        const lines = text.split('\n').map(escapeParens)
+
+        // Build content stream using Courier (monospace) and line spacing
+        const leading = 14
+        let contentStream = 'BT\n/F1 12 Tf\n1 0 0 1 40 750 Tm\n'
+        for (let i = 0; i < lines.length; i++) {
+          const line = lines[i]
+          contentStream += `(${line}) Tj\nT* 0 -${leading} Td\n`
+        }
+        contentStream += 'ET\n'
+        const contentBytes = encoder.encode(contentStream)
+        const streamObj = `<< /Length ${contentBytes.length} >>\nstream\n${contentStream}endstream\n`
+
+        // PDF objects (header plus objects 1..N)
+        const header = '%PDF-1.1\n%\u00ff\u00ff\u00ff\u00ff\n'
+        const obj1 = '1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n'
+        const obj2 = '2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n'
+        const obj3 = '3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>\nendobj\n'
+        const obj4 = '4 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>\nendobj\n'
+        const obj5 = `5 0 obj\n${streamObj}endobj\n`
+
+        const objs = [header, obj1, obj2, obj3, obj4, obj5]
+
+        // Encode objects and compute offsets
+        const encodedParts = objs.map(s => encoder.encode(s))
+        let offset = 0
+        const offsets: number[] = []
+        for (let i = 0; i < encodedParts.length; i++) {
+          offsets.push(offset)
+          offset += encodedParts[i].length
+        }
+
+        const xrefStart = offset
+
+        // object count (excluding header chunk)
+        const objectCount = objs.length - 1
+        let xref = `xref\n0 ${objectCount + 1}\n`
+        xref += '0000000000 65535 f \n'
+        // objects are numbered 1..objectCount, their offsets are offsets[1..]
+        for (let i = 1; i <= objectCount; i++) {
+          xref += offsets[i].toString().padStart(10, '0') + ' 00000 n \n'
+        }
+
+        const trailer = `trailer\n<< /Size ${objectCount + 1} /Root 1 0 R >>\nstartxref\n${xrefStart}\n%%EOF\n`
+
+        // Assemble final file bytes
+        const allBuffers = [...encodedParts, encoder.encode(xref), encoder.encode(trailer)]
+        const totalLen = allBuffers.reduce((s, b) => s + b.length, 0)
+        const out = new Uint8Array(totalLen)
+        let pos = 0
+        for (const b of allBuffers) {
+          out.set(b, pos)
+          pos += b.length
+        }
+        return out
+      }
+
+      const pdfBytes = createSimplePdfBytes(bodyText)
+
+      if (doPrint) {
+        const url = URL.createObjectURL(new Blob([pdfBytes], { type: 'application/pdf' }))
+        const w = window.open(url, '_blank')
+        if (w) w.focus()
+        setExportLoading(false)
+        setExportModalOpen(false)
+        return
+      }
+
+      const filename = `elder-ease-tutorials-${option}-${Date.now()}.pdf`
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = filename
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      URL.revokeObjectURL(url)
+    } catch (err) {
+      console.error("Export error", err)
+      alert("Failed to generate PDF. Please try again.")
+    } finally {
+      setExportLoading(false)
+      setExportModalOpen(false)
+    }
+  }
   
   // Load favorites on mount
   useEffect(() => {
@@ -1703,7 +1752,7 @@ export default function ElderTutorialPage() {
             <div>
               <h2 className="text-lg font-bold">ElderEase</h2>
               <p className="text-xs text-emerald-100">
-                {greeting}, User
+                {greeting}
               </p>
             </div>
           </div>
@@ -1757,7 +1806,7 @@ export default function ElderTutorialPage() {
             <div>
               <h2 className="text-xl font-bold">ElderEase</h2>
               <p className="text-sm text-emerald-200 mt-1">
-                {greeting}, User
+                {greeting}
               </p>
             </div>
           </div>
@@ -1778,21 +1827,6 @@ export default function ElderTutorialPage() {
               <div className="flex items-center justify-between text-xs text-emerald-300 mt-2">
                 <span>{stats.completedTutorials} completed</span>
                 <span>{stats.inProgressTutorials} in progress</span>
-              </div>
-            </div>
-            
-            {/* Learning Streak */}
-            <div className="bg-white/5 rounded-xl p-4 border border-emerald-600/20">
-              <div className="flex items-center gap-2 mb-2">
-                <Trophy className="h-4 w-4 text-amber-300" />
-                <span className="text-sm font-medium text-emerald-200">Learning Streak</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="text-xl font-bold text-white">{stats.totalTimeSpent} min</div>
-                  <div className="text-xs text-emerald-300">Time spent</div>
-                </div>
-                <Target className="h-8 w-8 text-emerald-300" />
               </div>
             </div>
           </div>
@@ -1828,7 +1862,7 @@ export default function ElderTutorialPage() {
           {favorites.length > 0 && (
             <div className="mt-6">
               <div className="flex items-center gap-2 px-4 mb-3">
-                <Bookmark className="h-4 w-4 text-amber-300" />
+                <Star className="h-4 w-4 text-amber-300" />
                 <span className="text-sm font-medium text-emerald-200">Favorites ({favorites.length})</span>
               </div>
               <div className="space-y-1">
@@ -1951,18 +1985,16 @@ export default function ElderTutorialPage() {
                   )}
                 </div>
 
-                {/* Added: Print / Export B&W button */}
-                <div className="flex items-center gap-2">
-                  <Button
-                    onClick={handlePrintBW}
-                    variant="outline"
-                    size="sm"
-                    className="hidden md:inline-flex gap-2 border-gray-300 hover:border-gray-400 rounded-xl"
-                    title="Print / Export page in black & white"
-                  >
-                    Print B/W
-                  </Button>
-                </div>
+                {/* Export/Print Button */}
+                <Button
+                  onClick={() => setExportModalOpen(true)}
+                  variant="outline"
+                  size="sm"
+                  className="gap-2 border-emerald-300 hover:border-emerald-400 hover:bg-emerald-50 rounded-xl"
+                >
+                  <Download className="h-4 w-4" />
+                  Export
+                </Button>
               </div>
             </div>
 
@@ -2189,7 +2221,6 @@ export default function ElderTutorialPage() {
                     <span className="text-sm text-gray-500">
                       {tutorialData[currentPlatform as keyof typeof tutorialData]?.length || 0} tutorials
                     </span>
-                    <Filter className="h-4 w-4 text-gray-400" />
                   </div>
                 </div>
                 
@@ -2399,6 +2430,120 @@ export default function ElderTutorialPage() {
         currentContext={currentView === "detail" && currentTutorial ? currentTutorial.title : currentView}
         onNavigate={handleChatbotNavigation}
       />
+
+      {/* Export Modal */}
+      {exportModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <Card className="w-full max-w-md">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="h-5 w-5" />
+                Export Tutorials
+              </CardTitle>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setExportModalOpen(false)}
+                className="h-8 w-8 p-0"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-3">
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    id="completed"
+                    name="exportOption"
+                    checked={exportOption === 'completed'}
+                    onChange={() => setExportOption('completed')}
+                    className="h-4 w-4 text-emerald-600"
+                  />
+                  <label htmlFor="completed" className="text-sm font-medium">
+                    Completed Tutorials ({stats.completedTutorials})
+                  </label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    id="in-progress"
+                    name="exportOption"
+                    checked={exportOption === 'in-progress'}
+                    onChange={() => setExportOption('in-progress')}
+                    className="h-4 w-4 text-emerald-600"
+                  />
+                  <label htmlFor="in-progress" className="text-sm font-medium">
+                    In-Progress Tutorials ({stats.inProgressTutorials})
+                  </label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    id="favorites"
+                    name="exportOption"
+                    checked={exportOption === 'favorites'}
+                    onChange={() => setExportOption('favorites')}
+                    className="h-4 w-4 text-emerald-600"
+                  />
+                  <label htmlFor="favorites" className="text-sm font-medium">
+                    Favorite Tutorials ({favorites.length})
+                  </label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    id="all"
+                    name="exportOption"
+                    checked={exportOption === 'all'}
+                    onChange={() => setExportOption('all')}
+                    className="h-4 w-4 text-emerald-600"
+                  />
+                  <label htmlFor="all" className="text-sm font-medium">
+                    All Tutorials ({Object.values(tutorialData).reduce((sum, tutorials) => sum + tutorials.length, 0)})
+                  </label>
+                </div>
+              </div>
+              
+              <div className="flex gap-2 pt-4">
+                <Button
+                  onClick={() => setExportModalOpen(false)}
+                  variant="outline"
+                  className="flex-1"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={() => generatePDF(exportOption, false)}
+                  disabled={exportLoading}
+                  className="flex-1 gap-2"
+                  style={{ backgroundColor: PRIMARY_COLOR }}
+                >
+                  {exportLoading ? (
+                    <>
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                      Exporting...
+                    </>
+                  ) : (
+                    <>
+                      <Download className="h-4 w-4" />
+                      Download
+                    </>
+                  )}
+                </Button>
+                <Button
+                  onClick={() => generatePDF(exportOption, true)}
+                  variant="outline"
+                  className="flex-1 gap-2"
+                >
+                  <Printer className="h-4 w-4" />
+                  Print
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   )
 }
